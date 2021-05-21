@@ -1,0 +1,18 @@
+<header class="py-4 bg-gray-dark">
+    <div class="flex items-baseline justify-between mx-16">
+        <div class="flex gap-x-16">
+            <span class="text-xl">FakeCSV</span>
+            <button>
+                <a href="{% url 'home' %}">Schemas</a>
+            </button>
+        </div>
+        <div class="flex space-x-4">
+            <p class="text-gray-light">Hello,
+                <span class="text-gray-darkest">{{ request.user.username }}</span>
+            </p>
+            <button>
+                <a href="{% url 'logout' %}" class="text-gray-light">Logout</a>
+            </button>
+        </div>
+    </div>
+</header>

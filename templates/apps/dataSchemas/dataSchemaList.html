@@ -1,0 +1,44 @@
+{% extends 'base/base.html' %}
+{% block header %}
+    {% include 'base/header/header.html' %}
+{% endblock %}
+{% block content %}
+    <div class="min-h-screen pl-16 w-3/4">
+        <div class="grid grid-flow-col">
+            <h1 class="py-8 text-2xl">Data schemas</h1>
+            <button class="justify-self-end p-2 self-center bg-green text-white rounded">
+                <a href="{% url 'schema-new' %}">New Schema</a>
+            </button>
+        </div>
+        <table class="table-auto border w-full">
+            <thead>
+            <tr>
+                <th class="border pl-6 py-4 text-left">#</th>
+                <th class="border pl-6 text-left">Title</th>
+                <th class="border pl-6 text-left">Modified</th>
+                <th class="border pl-6 text-left">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td class="border pl-6 py-4 text-left">{{ object.id }}</td>
+                    <td class="border pl-6 text-left">
+                        <button>
+                            <a class="text-blue" href="{% url 'schema-sets' object.id %}">
+                                {{ object.title }}
+                            </a>
+                        </button>
+                    </td>
+                    <td class="border pl-6 text-left">{{ object.updated_at }}</td>
+                    <td class="border pl-6 text-left">
+                        <button class="text-red">
+                            <a href="{% url 'schema-delete' object.id %}">Delete</a>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

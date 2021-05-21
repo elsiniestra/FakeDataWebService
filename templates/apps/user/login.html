@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <div class="min-h-screen flex items-center justify-center bg-white">
+        <div class="py-12 sm:py-20 border border-gray-lightest w-3/4 sm:w-1/2 min-w-min rounded">
+            <h1 class="font-sans font-light text-4xl text-center p-14 pt-0">Login</h1>
+            <form method="POST" class="w-2/3 mx-auto grid grid-flow-row gap-y-6 text-center">
+                {% csrf_token %}
+                <label for="{{ form.username.id_for_label }}">
+                    <input type="text" name="username"
+                           class="border border-gray-light rounded placeholder-gray-darkest w-full"
+                           placeholder="Username"
+                           required>
+                </label>
+                <label for="{{ form.password.id_for_label }}">
+                    <input type="password" name="password"
+                           class="border border-gray-light rounded placeholder-gray-darkest w-full"
+                           placeholder="Password"
+                           required>
+                </label>
+                <button type="submit" class="w-20 h-10 bg-blue text-white rounded justify-self-end">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

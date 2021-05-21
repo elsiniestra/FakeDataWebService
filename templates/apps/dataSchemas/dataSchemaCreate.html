@@ -1,0 +1,153 @@
+{% extends 'base/base.html' %}
+{% block header %}
+    {% include 'base/header/header.html' %}
+{% endblock %}
+{% block content %}
+    <form method="POST" class="min-h-screen pl-16 w-3/4">
+        {% csrf_token %}
+        <div>
+            <div class="grid grid-flow-col">
+                <h1 class="py-8 text-2xl">Schema</h1>
+                <button type="submit"
+                        class="justify-self-end p-2 self-center bg-blue text-white rounded">
+                    Submit
+                </button>
+            </div>
+            <div class="grid gap-y-4">
+                <label class="grid text-black gap-y-2" for="{{ form.title.id_for_label }}">
+                    Title
+                    {{ form.title }}
+                </label>
+                <label class="grid text-black gap-y-2"
+                       for="{{ form.column_separator.id_for_label }}">
+                    Column separator
+                    {{ form.column_separator }}
+                </label>
+                <label class="grid text-black gap-y-2"
+                       for="{{ form.string_character.id_for_label }}">
+                    String character
+                    {{ form.string_character }}
+                </label>
+            </div>
+        </div>
+
+        <div>
+            <div class="grid grid-flow-row">
+                <h1 class="py-8 text-2xl">Schema columns</h1>
+                <div class="grid gap-y-4" id="columns">
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        <div class="grid grid-flow-col gap-x-4"
+                             id="columnItem{{ forloop.counter0 }}"
+                             style="grid-template-columns: repeat(3, auto) min-content">
+                            <label class="grid text-black gap-y-2"
+                                   for="{{ form.title.id_for_label }}">
+                                Column name
+                                {{ form.title }}
+                            </label>
+                            <label class="grid text-black gap-y-2"
+                                   for="{{ form.type.id_for_label }}">
+                                Type
+                                {{ form.type }}
+                            </label>
+                            <label class="grid text-black gap-y-2 justify-self-end"
+                                   for="{{ form.order.id_for_label }}">
+                                Order
+                                {{ form.order }}
+                            </label>
+                            <button class="self-end p-2 text-red invisible"
+                                    type="button"
+                                    id="deleteColumn"
+                                    value="{{ forloop.counter0 }}">Delete
+                            </button>
+                        </div>
+                    {% endfor %}
+                    <p class="text-red">{{ formset.non_form_errors.as_text|safe }}</p>
+                </div>
+            </div>
+        </div>
+        <button class="p-2 my-8 bg-blue text-white rounded" id="formAddColumnButton" type="button">
+            Add column
+        </button>
+    </form>
+    <script type="application/javascript">
+        const addColumnButton = document.getElementById('formAddColumnButton');
+        addColumnButton.addEventListener('click', () => Column.addNew());
+    </script>
+
+    <script type="application/javascript">
+        document.body.addEventListener('click', event => {
+            const deleteButtonId = 'deleteColumn';
+            if (event.target.id === deleteButtonId) {
+                const columnToDelete = new Column(event.target.value);
+                columnToDelete.delete();
+            }
+        })
+    </script>
+
+    <script type="application/javascript">
+        class Column {
+            constructor(columnIndex) {
+                this.index = columnIndex;
+                this.create();
+            }
+
+            create() {
+                this.html = document
+                    .getElementById('columnItem0')
+                    .cloneNode(true);
+
+                this.setColumnIndex();
+                this.modifyFormMembers();
+                this.modifyDeleteButton();
+            }
+
+            static addNew() {
+                const totalColumnsElement = document.querySelector('input[name=form-TOTAL_FORMS]');
+                let totalColumns = Number(totalColumnsElement.value);
+                const newColumn = new Column(totalColumns);
+
+                totalColumns++;
+                totalColumnsElement.setAttribute('value', totalColumns);
+                document.getElementById('columns').append(newColumn.html);
+            }
+
+            setColumnIndex() {
+                this.html.setAttribute('id', `columnItem${this.index}`);
+            }
+
+            modifyDeleteButton() {
+                const deleteButton = this.html.querySelector('#deleteColumn');
+                const deleteButtonValue = deleteButton.value.replace('0', this.index);
+                deleteButton.setAttribute('value', deleteButtonValue);
+                deleteButton.classList.remove('invisible');
+            }
+
+            modifyFormMembers() {
+                Array.from(this.html.getElementsByTagName('label')).forEach(value => {
+                    const attrFor = value
+                        .getAttribute('for')
+                        .replace('-0-', '-' + this.index + '-');
+                    value.setAttribute('for', attrFor);
+
+                    this.modifyFormMemberItem(value.childNodes[1])
+                });
+            }
+
+            modifyFormMemberItem(formMember) {
+                const name = formMember
+                    .getAttribute('name')
+                    .replace('-0-', '-' + this.index + '-');
+                formMember.setAttribute('name', name);
+                formMember.setAttribute('id', 'id_' + name);
+                formMember.value = '';
+            }
+
+            delete() {
+                document.getElementById(`columnItem${this.index}`).remove();
+                const totalFormsElement = document.querySelector('input[name=form-TOTAL_FORMS]');
+                totalFormsElement.setAttribute('value', totalFormsElement.value - 1);
+            }
+        }
+    </script>
+{% endblock %}

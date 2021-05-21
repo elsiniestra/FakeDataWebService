@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+{% block header %}
+    {% include 'base/header/header.html' %}
+{% endblock %}
+{% block content %}
+    <div class="min-h-screen pl-16 w-3/4">
+        <div class="grid grid-flow-col">
+            <h1 class="py-8 text-2xl">Data sets</h1>
+            <form method="POST" action="{% url 'schema-sets-create' schema_id %}"
+                  class="flex gap-x-4 justify-self-end self-center">
+                {% csrf_token %}
+                <label class="flex gap-x-3" for="rows">
+                    <span class="self-center">Rows:</span>
+                    <input class="w-20 border-gray-light rounded" type="number" name="rows">
+                </label>
+                <button class="p-2 bg-green text-white rounded"
+                        type="submit">
+                    Generate data
+                </button>
+            </form>
+        </div>
+        <table class="table-auto border w-full">
+            <thead>
+            <tr>
+                <th class="border pl-6 py-4 text-left">#</th>
+                <th class="border pl-6 text-left">Created</th>
+                <th class="border pl-6 text-left">Status</th>
+                <th class="border pl-6 text-left">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td class="border pl-6 py-4 text-left">{{ object.id }}</td>
+                    <td class="border pl-6 text-left">{{ object.created_at| date:'Y-m-d' }}</td>
+                    <td class="border pl-6 text-left">
+                        <div>
+                            <span class="p-2 text-white rounded
+                            {% if object.status == 'Ready' %}bg-green{% else %}bg-gray-darkest{% endif %}">
+                                {{ object.status }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="border pl-6 text-left">
+                        <div class="flex">
+                            <button class="text-blue">
+                                <a href="{% url 'schema-sets-download' object.id %}">Download</a>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
