@@ -72,9 +72,9 @@ TEMPLATES = [
 
 ASGI_APPLICATION = 'src.config.asgi.application'
 
-BASE_URL = '/data/home/'
+HOME_URL = '/data/home/'
 LOGIN_URL = '/user/login/'
-LOGIN_REDIRECT_URL = BASE_URL
+LOGIN_REDIRECT_URL = HOME_URL
 LOGOUT_REDIRECT_URL = LOGIN_REDIRECT_URL
 
 TAILWIND_APP_NAME = 'src.apps.core.tailwind_core'

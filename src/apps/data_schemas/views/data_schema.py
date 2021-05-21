@@ -19,7 +19,7 @@ class DataSchemaListView(LoginRequiredMixin, ListView):
 class DataSchemaCreateView(LoginRequiredMixin, FormView):
     template_name = 'apps/dataSchemas/dataSchemaCreate.html'
     form_class = DataSchemaForm
-    success_url = settings.BASE_URL
+    success_url = settings.HOME_URL
 
     def dispatch(self, request, *args, **kwargs) -> HttpResponseRedirect:
         form: DataSchemaForm = DataSchemaForm(request.POST or None)
@@ -39,7 +39,7 @@ class DataSchemaCreateView(LoginRequiredMixin, FormView):
 
 def data_schema_delete_view(request: Any, schema_id: int) -> HttpResponseRedirect:
     DataSchema.objects.get(id=schema_id).delete()
-    return redirect(to=settings.BASE_URL)
+    return redirect(to=settings.HOME_URL)
 
 
 class HomeView(DataSchemaListView):
