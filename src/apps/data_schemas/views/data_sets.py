@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic import ListView
 from django.db.models import QuerySet
 from django.shortcuts import redirect
+from django.db import transaction
 from django.utils import timezone
 
 from src.apps.data_schemas.tasks import generate_csv_data_set_file
@@ -30,7 +31,7 @@ def data_set_create_view(request: Any, schema_id: int) -> HttpResponseRedirect:
         rows=int(request.POST.get('rows')),
         created_at=timezone.now(),
     )
-    generate_csv_data_set_file.delay(data_set.id)
+    transaction.on_commit(lambda: generate_csv_data_set_file.delay(data_set.id))
     return redirect(to=f'/data/schema/{schema_id}/sets/')  # TODO:
 
 
