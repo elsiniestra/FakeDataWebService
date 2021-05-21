@@ -1,4 +1,4 @@
-#FakeDataWebService
+# FakeDataWebService
 ## Setup
 1. Install dependencies `pip install -r requirements.txt`
 2. Specify .env with .env.example.
