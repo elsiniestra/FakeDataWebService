@@ -10,3 +10,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('src.apps.urls')),
 ]
+handler404 = 'src.config.core.views.handler404'

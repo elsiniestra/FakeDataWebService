@@ -2,7 +2,7 @@ from typing import NoReturn
 
 from src.apps.data_schemas.services import CSVDataSet
 from src.apps.data_schemas.models import DataSet
-from src.config.celery import celery_app
+from src.config.core.celery import celery_app
 
 
 @celery_app.task
