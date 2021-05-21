@@ -30,7 +30,7 @@ def data_set_create_view(request: Any, schema_id: int) -> HttpResponseRedirect:
         rows=int(request.POST.get('rows')),
         created_at=timezone.now(),
     )
-    generate_csv_data_set_file.delay(data_set)
+    generate_csv_data_set_file.delay(data_set.id)
     return redirect(to=f'/data/schema/{schema_id}/sets/')  # TODO:
 
 

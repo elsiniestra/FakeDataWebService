@@ -6,8 +6,7 @@ from src.config.core.celery import celery_app
 
 
 @celery_app.task
-def generate_csv_data_set_file(data_set: DataSet) -> NoReturn:
-    print(1)
+def generate_csv_data_set_file(data_set_id: int) -> NoReturn:
+    data_set: DataSet = DataSet.objects.get(id=data_set_id)
     csv_generator: CSVDataSet = CSVDataSet(data_set=data_set)
-    print(2)
     csv_generator.generate()
