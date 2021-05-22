@@ -46,7 +46,6 @@ class DataSet(models.Model):
     class Statuses(models.TextChoices):
         READY = 'Ready'
         PROCESSING = 'Processing'
-        NOT_READY = 'Not Ready'
 
     file = models.FileField(upload_to='schema/sets/', null=True)
     schema = models.ForeignKey(
@@ -58,6 +57,6 @@ class DataSet(models.Model):
     status = models.CharField(
         max_length=64,
         choices=Statuses.choices,
-        default=Statuses.NOT_READY,
+        default=Statuses.PROCESSING,
     )
     created_at = models.DateTimeField(auto_now_add=True)
