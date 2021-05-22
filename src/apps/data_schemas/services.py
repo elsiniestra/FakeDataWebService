@@ -1,13 +1,11 @@
-from dataclasses import dataclass
 from typing import AnyStr, NoReturn
-from os.path import join
+from dataclasses import dataclass
 import csv
 import io
 
 from django.core.files.base import ContentFile
 from django.db.models import QuerySet
 from django.http import HttpResponse
-from django.conf import settings
 from faker import Faker
 
 from src.apps.data_schemas.models import DataSet, DataSchemaColumn
@@ -46,12 +44,8 @@ class CSVDataSet:
         return (f'{self.data_set.schema.title}_'
                 f'{self.data_set.created_at.strftime("%d-%m-%y-%H:%M")}.csv')
 
-    @property
-    def file_path(self) -> str:
-        return join(settings.MEDIA_ROOT, 'schema', 'sets', self.file_name)
-
     def download_trigger(self) -> HttpResponse:
-        data: AnyStr = open(self.data_set.file.path, 'r').read()
+        data: AnyStr = self.data_set.file.open()
         response: HttpResponse = HttpResponse(data, content_type='application/x-download')
         response['Content-Disposition'] = f'attachment;filename={self.data_set.file.name}'
         return response
